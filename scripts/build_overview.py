@@ -25,11 +25,12 @@ import shutil
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 from sklearn.neighbors import NearestNeighbors
 
 from drbench import datasets
 from drbench.metrics import local_radius
-from drbench.runner import _paths, load_results, summarize
+from drbench.runner import RESULTS_DIR, _paths, load_results, summarize
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = ["pca", "mds", "tsne", "umap", "densmap", "pacmap", "trimap"]
@@ -128,6 +129,20 @@ def big_data(table):
     return out
 
 
+def stability_data():
+    """Seed and row-order stability per method (results/stability*.csv from scripts/stability.py)."""
+    path = RESULTS_DIR / "stability.csv"
+    if not path.exists():
+        return None
+    df = pd.read_csv(path)
+    out = {}
+    for (exp, method), g in df.groupby(["experiment", "method"]):
+        out.setdefault(method, {})[exp] = {k: round(float(g[k].mean()), 3) for k in ("procrustes", "knn", "dist")}
+    pts = RESULTS_DIR / "stability_points.csv"
+    rho = pd.read_csv(pts).groupby("method")["rho"].mean().round(2).to_dict() if pts.exists() else {}
+    return {"methods": out, "rho": rho}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--publish", type=Path, help="also copy the pages to DIR/ja.html and DIR/index.html")
@@ -189,6 +204,7 @@ def main():
         "fast": {a.split("=")[1]: mean_diff(table, a, b) for a, b in FAST},
         "ports": [{"rust": a, "ref": b, **mean_diff(table, a, b)} for a, b in PORTS],
         "big": big_data(table),
+        "stability": stability_data(),
     }
     payload = json.dumps(data, separators=(",", ":"), ensure_ascii=False).replace("</", "<\\/")
     for template, out, published in [
