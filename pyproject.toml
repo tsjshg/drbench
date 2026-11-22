@@ -1,7 +1,7 @@
 [project]
 name = "drbench"
 version = "0.1.0"
-description = "Add your description here"
+description = "A benchmark harness for comparing dimensionality-reduction methods on the same datasets and metrics"
 readme = "README.md"
 authors = [
     { name = "shingo.tsuji", email = "shingo.tsuji@gmail.com" }

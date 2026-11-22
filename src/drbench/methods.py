@@ -2,8 +2,16 @@
 
 Methods are addressed by a spec string, ``name`` or ``name:key=val,key=val``
 (e.g. ``tsne:perplexity=5``), so parameter variants need no extra code.
-A new method (MADR or otherwise) only has to be decorated with
-``@register("name")``.
+A new method only has to be decorated with ``@register("name")``.
+
+Methods can also live in other packages: a package that declares an entry
+point in the ``drbench.methods`` group, e.g. in its pyproject.toml
+
+    [project.entry-points."drbench.methods"]
+    mymethods = "mypackage.drbench_methods"
+
+has that module imported when drbench starts, so its ``@register`` calls
+add the methods (``drbench list`` shows them).
 """
 
 from __future__ import annotations
@@ -119,3 +127,18 @@ def trimap_(X, seed=0, n_inliers=12, **kw):
     np.random.seed(seed)
     model = trimap.TRIMAP(n_dims=2, n_inliers=n_inliers, knn_tuple=(nbrs, dist), **kw)
     return model.fit_transform(X)
+
+
+def _load_plugins() -> None:
+    """Import the modules of installed packages that register methods (entry point group ``drbench.methods``)."""
+    import warnings
+    from importlib.metadata import entry_points
+
+    for ep in entry_points(group="drbench.methods"):
+        try:
+            ep.load()
+        except Exception as err:  # a broken plugin should not break the built-in methods
+            warnings.warn(f"drbench: could not load method plugin {ep.name!r} ({ep.value}): {err}", stacklevel=2)
+
+
+_load_plugins()
