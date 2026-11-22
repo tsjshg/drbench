@@ -26,7 +26,7 @@ import pandas as pd
 from . import datasets, methods
 from .metrics import evaluate, knn_accuracy
 
-RESULTS_DIR = Path(__file__).resolve().parents[2] / "results"
+RESULTS_DIR = datasets.HOME / "results"
 
 
 def slug(spec: str) -> str:
