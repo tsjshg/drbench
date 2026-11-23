@@ -5,7 +5,7 @@
 A benchmark harness for comparing dimensionality-reduction methods on the
 same datasets with the same metrics. It was built to fix "what counts as
 better" before developing a new method:
-[ScaleRank](https://github.com/tsjshg/scalerank-web), the successor of the
+[ScaleRank](https://github.com/tsjshg/scalerank), the successor of the
 earlier MADR experiments, is developed against it.
 
 ## Usage
@@ -54,7 +54,7 @@ mymethods = "mypackage.drbench_methods"
 drbench imports that module at start-up, so its `@register` calls add the
 methods; install the package into drbench's environment and they show up in
 `drbench list`. ScaleRank's research code
-([`scalerank-web/research`](https://github.com/tsjshg/scalerank-web/tree/main/research))
+([`scalerank/research`](https://github.com/tsjshg/scalerank/tree/main/research))
 works this way.
 
 ## Metrics

@@ -4,7 +4,7 @@
 
 次元削減手法を、同じデータと同じ指標で比べるためのベンチマーク基盤。
 新しい手法を作る前に「何をもって良いとするか」を固定するために作った。
-MADR の後継である [ScaleRank](https://github.com/tsjshg/scalerank-web) は、これを使って開発している。
+MADR の後継である [ScaleRank](https://github.com/tsjshg/scalerank) は、これを使って開発している。
 
 ## 使い方
 
@@ -49,7 +49,7 @@ mymethods = "mypackage.drbench_methods"
 
 drbench は起動時にそのモジュールを読み込むので、中の `@register` で手法が登録される。
 パッケージを drbench の環境に入れれば、`drbench list` に出てくる。
-ScaleRank の研究用コード（[`scalerank-web/research`](https://github.com/tsjshg/scalerank-web/tree/main/research)）はこの仕組みを使っている。
+ScaleRank の研究用コード（[`scalerank/research`](https://github.com/tsjshg/scalerank/tree/main/research)）はこの仕組みを使っている。
 
 ## 指標
 
